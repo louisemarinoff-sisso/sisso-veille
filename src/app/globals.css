@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Neue Haas Display';
+  src: url('/fonts/NeueHaasDisplayLight.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #14130f;
+}
+
+::selection {
+  background: #f3f1ec;
+  color: #14130f;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9c5bb;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sv-hscroll {
+  scrollbar-width: none;
+}
+
+.sv-hscroll::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes svblink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.sv-card {
+  transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sv-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 34px 64px -34px rgba(20, 19, 15, 0.45);
+}
+
+.sv-zoom {
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.sv-card:hover .sv-zoom {
+  transform: scale(1.055);
+}
+
+.sv-arrow {
+  opacity: 0;
+  transform: translateY(10px) rotate(-8deg);
+  transition: opacity 0.45s, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sv-card:hover .sv-arrow {
+  opacity: 1;
+  transform: translateY(0) rotate(0);
+}
+
+.sv-hero:hover .sv-zoom {
+  transform: scale(1.04);
+}
+
+.sv-uline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1.5px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sv-uline:hover {
+  background-size: 100% 1.5px;
+}
+
+.sv-pill {
+  border-color: var(--line-2, #cdcac0);
+}
+
+.sv-pill:hover {
+  border-color: #16150f;
+  background: #fff;
+}
+
+.sv-round:hover {
+  border-color: #16150f;
+  background: #fff;
+}
