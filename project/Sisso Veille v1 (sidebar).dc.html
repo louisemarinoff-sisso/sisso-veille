@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Mono:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #F4F3EF; }
+  ::selection { background: #15140F; color: #F4F3EF; }
+  a { text-decoration: none; color: inherit; }
+  button { font: inherit; cursor: pointer; border: none; background: none; padding: 0; color: inherit; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: #d4d1c8; border-radius: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  @keyframes svblink { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="--paper:#F4F3EF; --surface:#FFFFFF; --ink:#15140F; --ink-2:#6E6C64; --ink-3:#A6A39A; --line:#E3E1DA; --line-2:#CECBC1; --accent:#2236E8; --font-sans:'Schibsted Grotesk',-apple-system,sans-serif; --font-mono:'JetBrains Mono',monospace; min-height:100vh; display:flex; background:var(--paper); color:var(--ink); font-family:var(--font-sans); -webkit-font-smoothing:antialiased; letter-spacing:-0.01em;">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside style="width:268px; flex:none; border-right:1px solid var(--line); padding:30px 26px; position:sticky; top:0; height:100vh; display:flex; flex-direction:column;">
+    <button onClick="{{ navItems.0.go }}" style="text-align:left; display:block;">
+      <div style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.34em; color:var(--ink-2); text-transform:uppercase;">SISSO</div>
+      <div style="font-size:30px; font-weight:600; letter-spacing:-0.03em; line-height:.92; margin-top:5px;">VEILLE</div>
+      <div style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.06em; color:var(--ink-3); text-transform:uppercase; margin-top:9px;">Intelligence créative · IA</div>
+    </button>
+
+    <div style="height:1px; background:var(--line); margin:26px 0;"></div>
+
+    <nav style="display:flex; flex-direction:column; gap:2px;">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="3">
+        <button onClick="{{ item.go }}" style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; margin:0 -10px; border-radius:3px; text-align:left;" style-hover="background:rgba(0,0,0,0.035);">
+          <span style="display:flex; align-items:center; gap:10px;">
+            <span style="width:5px; height:5px; border-radius:1px; background:{{ item.active }};"></span>
+            <span style="font-size:15px; font-weight:500;">{{ item.label }}</span>
+          </span>
+          <sc-if value="{{ item.count }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--ink); border:1px solid var(--line-2); border-radius:20px; padding:1px 7px;">{{ item.count }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </nav>
+
+    <div style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.16em; color:var(--ink-3); text-transform:uppercase; margin:26px 0 10px 0;">Secteurs</div>
+    <nav style="display:flex; flex-direction:column;">
+      <sc-for list="{{ sidebarSectors }}" as="s" hint-placeholder-count="5">
+        <button onClick="{{ s.go }}" style="display:flex; align-items:center; gap:11px; padding:9px 10px; margin:0 -10px; border-radius:3px; text-align:left; border-bottom:1px solid var(--line);" style-hover="background:rgba(0,0,0,0.035);">
+          <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-3); width:18px;">{{ s.n }}</span>
+          <span style="font-size:13px; font-weight:500; letter-spacing:0.01em; flex:1;">{{ s.label }}</span>
+          <sc-if value="{{ s.active }}" hint-placeholder-val="{{ false }}">
+            <span style="width:6px; height:6px; border-radius:50%; background:var(--accent);"></span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </nav>
+
+    <div style="flex:1;"></div>
+
+    <div style="border:1px solid var(--line); border-radius:4px; padding:12px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:9px;">
+        <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; color:var(--ink-3); text-transform:uppercase;">Typographie</span>
+        <span style="font-family:var(--font-mono); font-size:10px; color:var(--ink-2);">{{ fontName }}</span>
+      </div>
+      <div style="display:flex; gap:5px;">
+        <sc-for list="{{ fontOptions }}" as="f" hint-placeholder-count="3">
+          <button onClick="{{ f.pick }}" title="{{ f.name }}" style="flex:1; height:30px; border:1px solid var(--line-2); border-radius:3px; font-size:14px; font-weight:600; color:var(--ink);" style-hover="border-color:var(--ink);">{{ f.k }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:7px; margin-top:14px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.04em; color:var(--ink-2); text-transform:uppercase;">
+      <span style="width:6px; height:6px; border-radius:50%; background:var(--accent); animation:svblink 2.4s ease-in-out infinite;"></span>
+      Agent actif · MAJ lundi 06:00
+    </div>
+    <button onClick="{{ goSystem }}" style="text-align:left; margin-top:12px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; color:var(--ink-3); text-transform:uppercase;" style-hover="color:var(--ink);">↳ Système de design</button>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main style="flex:1; min-width:0;">
+  <div style="max-width:1180px; margin:0 auto; padding:54px 60px 110px 60px;">
+
+    <!-- ========= ACCUEIL ========= -->
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <!-- edition header -->
+        <header style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px; flex-wrap:wrap; padding-bottom:28px; border-bottom:1px solid var(--ink); margin-bottom:48px;">
+          <div>
+            <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.22em; color:var(--ink-2); text-transform:uppercase;">Édition hebdomadaire</div>
+            <h1 style="font-size:66px; font-weight:600; letter-spacing:-0.04em; line-height:.9; margin:14px 0 0 0;">Semaine N°24</h1>
+            <div style="font-family:var(--font-mono); font-size:13px; letter-spacing:0.04em; color:var(--ink-2); margin-top:14px;">15 → 21 JUIN 2026</div>
+          </div>
+          <div style="text-align:right; font-family:var(--font-mono); font-size:11px; line-height:1.9; color:var(--ink-2); letter-spacing:0.02em;">
+            <div>Générée lundi 15.06 · 06:00</div>
+            <div>par l’agent Sisso</div>
+            <div style="color:var(--ink); margin-top:8px;">{{ totalArticles }} articles · 5 secteurs · {{ totalTrends }} tendances</div>
+          </div>
+        </header>
+
+        <!-- à la une -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:22px;">
+          <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">À la une</span>
+          <span style="flex:1; height:1px; background:var(--line);"></span>
+          <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-3);">01 / 05</span>
+        </div>
+
+        <article style="border:1px solid var(--ink); border-radius:4px; background:var(--surface); display:grid; grid-template-columns:1.5fr 1fr; overflow:hidden; margin-bottom:64px;">
+          <div style="padding:36px; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:22px;">
+              <button onClick="{{ hero.openSector }}" style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; color:var(--ink);" style-hover="color:var(--accent);">{{ hero.num }} · {{ hero.sector }}</button>
+              <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--surface); background:var(--ink); padding:3px 8px; border-radius:3px;">À la une</span>
+            </div>
+            <a href="{{ hero.url }}" target="_blank" rel="noopener" style="display:block;">
+              <h2 style="font-size:38px; font-weight:600; letter-spacing:-0.025em; line-height:1.04; margin:0; text-wrap:balance;">{{ hero.title }}</h2>
+            </a>
+            <p style="font-size:16px; line-height:1.55; color:var(--ink-2); margin:20px 0 0 0; max-width:46ch;">{{ hero.e }}</p>
+            <div style="flex:1; min-height:24px;"></div>
+            <div style="display:flex; align-items:center; justify-content:space-between; padding-top:22px; border-top:1px solid var(--line);">
+              <span style="font-family:var(--font-mono); font-size:12px; color:var(--ink-2);">{{ hero.source }} · {{ hero.date }}</span>
+              <div style="display:flex; align-items:center; gap:18px;">
+                <button onClick="{{ heroToggle }}" style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.04em; text-transform:uppercase;">
+                  <sc-if value="{{ heroMarked }}" hint-placeholder-val="{{ false }}"><span style="color:var(--accent);">● Sauvé</span></sc-if>
+                  <sc-if value="{{ heroNotMarked }}" hint-placeholder-val="{{ true }}"><span style="color:var(--ink-2);">＋ Garder</span></sc-if>
+                </button>
+                <a href="{{ hero.url }}" target="_blank" rel="noopener" style="font-family:var(--font-mono); font-size:12px; letter-spacing:0.04em; text-transform:uppercase; font-weight:500;" style-hover="color:var(--accent);">Lire l’article ↗</a>
+              </div>
+            </div>
+          </div>
+          <div style="border-left:1px solid var(--line); position:relative; min-height:300px; background:#15140F; background-image:repeating-linear-gradient(115deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 13px), repeating-linear-gradient(25deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 22px);">
+            <div style="position:absolute; left:18px; top:16px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.16em; color:rgba(255,255,255,0.55); text-transform:uppercase;">FIG. 01 — VISUEL</div>
+            <div style="position:absolute; left:18px; bottom:16px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.04em; color:rgba(255,255,255,0.4);">Image source — à connecter</div>
+          </div>
+        </article>
+
+        <!-- par secteur -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:22px;">
+          <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">L’essentiel par secteur</span>
+          <span style="flex:1; height:1px; background:var(--line);"></span>
+          <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-3);">5 phares</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:64px;">
+          <sc-for list="{{ phares }}" as="a" hint-placeholder-count="5">
+            <article style="border:1px solid var(--line); border-radius:4px; background:var(--surface); padding:20px; display:flex; flex-direction:column; min-height:230px;" style-hover="border-color:var(--ink);">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                <button onClick="{{ a.openSector }}" style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; color:var(--ink-2);" style-hover="color:var(--accent);">{{ a.num }} · {{ a.sector }}</button>
+                <button onClick="{{ a.toggle }}" title="Garder" style="font-family:var(--font-mono); font-size:13px; line-height:1; color:var(--ink-3);" style-hover="color:var(--accent);">
+                  <sc-if value="{{ a.marked }}" hint-placeholder-val="{{ false }}"><span style="color:var(--accent);">●</span></sc-if>
+                  <sc-if value="{{ a.notMarked }}" hint-placeholder-val="{{ true }}"><span>＋</span></sc-if>
+                </button>
+              </div>
+              <a href="{{ a.url }}" target="_blank" rel="noopener">
+                <h3 style="font-size:19px; font-weight:600; letter-spacing:-0.02em; line-height:1.16; margin:0;">{{ a.title }}</h3>
+              </a>
+              <p style="font-size:13.5px; line-height:1.5; color:var(--ink-2); margin:12px 0 0 0;">{{ a.e }}</p>
+              <div style="flex:1; min-height:14px;"></div>
+              <div style="padding-top:14px; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">{{ a.source }} · {{ a.date }}</div>
+            </article>
+          </sc-for>
+          <div style="border:1px dashed var(--line-2); border-radius:4px; padding:20px; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:46px; font-weight:600; letter-spacing:-0.03em; line-height:1;">{{ totalArticles }}</div>
+            <div style="font-size:14px; color:var(--ink-2); margin-top:6px; line-height:1.4;">articles indexés et résumés cette semaine, répartis sur 5 secteurs.</div>
+          </div>
+        </div>
+
+        <!-- en bref -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:8px;">
+          <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">En bref</span>
+          <span style="flex:1; height:1px; background:var(--line);"></span>
+          <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-3);">Sélection secondaire</span>
+        </div>
+        <div style="margin-bottom:64px;">
+          <sc-for list="{{ secondary }}" as="a" hint-placeholder-count="6">
+            <a href="{{ a.url }}" target="_blank" rel="noopener" style="display:grid; grid-template-columns:62px 152px 1fr auto; align-items:center; gap:20px; padding:15px 8px; margin:0 -8px; border-bottom:1px solid var(--line);" style-hover="background:rgba(0,0,0,0.025);">
+              <span style="font-family:var(--font-mono); font-size:12px; color:var(--ink-3);">{{ a.date }}</span>
+              <button onClick="{{ a.openSector }}" style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.08em; color:var(--ink-2); text-align:left;">{{ a.num }} · {{ a.sector }}</button>
+              <span style="font-size:16px; font-weight:500; letter-spacing:-0.015em; line-height:1.25;">{{ a.title }}</span>
+              <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2); text-align:right; white-space:nowrap;">{{ a.source }} ↗</span>
+            </a>
+          </sc-for>
+        </div>
+
+        <!-- cahier des tendances -->
+        <sc-if value="{{ showTrends }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display:flex; align-items:center; gap:16px; margin-bottom:22px;">
+            <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">Cahier des tendances</span>
+            <span style="flex:1; height:1px; background:var(--line);"></span>
+            <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-3);">1 projet / secteur</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:14px;">
+            <article style="display:flex; flex-direction:column;">
+              <div style="aspect-ratio:3/4; border:1px solid var(--line); border-radius:4px; background:#1a1916; background-image:repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 12px); position:relative; overflow:hidden;">
+                <span style="position:absolute; left:11px; top:10px; font-family:var(--font-mono); font-size:9px; letter-spacing:0.1em; color:rgba(255,255,255,0.55);">01 · LUXE</span>
+              </div>
+              <div style="font-size:15px; font-weight:600; letter-spacing:-0.02em; margin-top:12px;">Édition Saint-Honoré</div>
+              <div style="font-family:var(--font-mono); font-size:10px; color:var(--ink-2); margin-top:4px; letter-spacing:0.02em;">ATELIER DYAKOVA</div>
+              <p style="font-size:12.5px; line-height:1.45; color:var(--ink-2); margin:8px 0 0 0;">Identité d’un concept-store éphémère, gravée dans le métal.</p>
+            </article>
+            <article style="display:flex; flex-direction:column;">
+              <div style="aspect-ratio:3/4; border:1px solid var(--line); border-radius:4px; background:#1a1916; background-image:radial-gradient(rgba(255,255,255,0.13) 1px, transparent 1.4px); background-size:11px 11px; position:relative; overflow:hidden;">
+                <span style="position:absolute; left:11px; top:10px; font-family:var(--font-mono); font-size:9px; letter-spacing:0.1em; color:rgba(255,255,255,0.55);">02 · ART</span>
+              </div>
+              <div style="font-size:15px; font-weight:600; letter-spacing:-0.02em; margin-top:12px;">Signal</div>
+              <div style="font-family:var(--font-mono); font-size:10px; color:var(--ink-2); margin-top:4px; letter-spacing:0.02em;">SPIN</div>
+              <p style="font-size:12.5px; line-height:1.45; color:var(--ink-2); margin:8px 0 0 0;">Signalétique générative d’une exposition, recalculée chaque jour.</p>
+            </article>
+            <article style="display:flex; flex-direction:column;">
+              <div style="aspect-ratio:3/4; border:1px solid var(--line); border-radius:4px; background:#1a1916; background-image:repeating-linear-gradient(45deg, rgba(255,255,255,0.09) 0 1px, transparent 1px 14px); position:relative; overflow:hidden;">
+                <span style="position:absolute; left:11px; top:10px; font-family:var(--font-mono); font-size:9px; letter-spacing:0.1em; color:rgba(255,255,255,0.55);">03 · COM</span>
+              </div>
+              <div style="font-size:15px; font-weight:600; letter-spacing:-0.02em; margin-top:12px;">Contre-forme</div>
+              <div style="font-family:var(--font-mono); font-size:10px; color:var(--ink-2); margin-top:4px; letter-spacing:0.02em;">BONSOIR PARIS</div>
+              <p style="font-size:12.5px; line-height:1.45; color:var(--ink-2); margin:8px 0 0 0;">Campagne d’affichage 100 % typographique, sans image.</p>
+            </article>
+            <article style="display:flex; flex-direction:column;">
+              <div style="aspect-ratio:3/4; border:1px solid var(--line); border-radius:4px; background:#1a1916; background-image:repeating-linear-gradient(0deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 9px), repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 9px); position:relative; overflow:hidden;">
+                <span style="position:absolute; left:11px; top:10px; font-family:var(--font-mono); font-size:9px; letter-spacing:0.1em; color:rgba(255,255,255,0.55);">04 · SPIRIT.</span>
+              </div>
+              <div style="font-size:15px; font-weight:600; letter-spacing:-0.02em; margin-top:12px;">Cuvée Brut Nature</div>
+              <div style="font-family:var(--font-mono); font-size:10px; color:var(--ink-2); margin-top:4px; letter-spacing:0.02em;">HERE DESIGN</div>
+              <p style="font-size:12.5px; line-height:1.45; color:var(--ink-2); margin:8px 0 0 0;">Packaging d’une cuvée bio, étiquette imprimée à l’encre de marc.</p>
+            </article>
+            <article style="display:flex; flex-direction:column;">
+              <div style="aspect-ratio:3/4; border:1px solid var(--line); border-radius:4px; background:#1a1916; background-image:repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0 1px, transparent 1px 13px); position:relative; overflow:hidden;">
+                <span style="position:absolute; left:11px; top:10px; font-family:var(--font-mono); font-size:9px; letter-spacing:0.1em; color:rgba(255,255,255,0.55);">05 · WEB</span>
+              </div>
+              <div style="font-size:15px; font-weight:600; letter-spacing:-0.02em; margin-top:12px;">Interface Lente</div>
+              <div style="font-family:var(--font-mono); font-size:10px; color:var(--ink-2); margin-top:4px; letter-spacing:0.02em;">LOCOMOTIVE</div>
+              <p style="font-size:12.5px; line-height:1.45; color:var(--ink-2); margin:8px 0 0 0;">Site éditorial expérimental, pensé contre le scroll infini.</p>
+            </article>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ========= ARCHIVES ========= -->
+    <sc-if value="{{ isArchives }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <header style="padding-bottom:24px; border-bottom:1px solid var(--ink); margin-bottom:8px;">
+          <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.22em; color:var(--ink-2); text-transform:uppercase;">Toutes les éditions</div>
+          <h1 style="font-size:52px; font-weight:600; letter-spacing:-0.035em; line-height:.95; margin:12px 0 0 0;">Archives</h1>
+        </header>
+        <div>
+          <sc-for list="{{ archives }}" as="ed" hint-placeholder-count="8">
+            <button style="width:100%; display:grid; grid-template-columns:120px 230px 1fr auto; align-items:center; gap:24px; padding:20px 8px; margin:0 -8px; border-bottom:1px solid var(--line); text-align:left;" style-hover="background:rgba(0,0,0,0.025);">
+              <span style="font-size:24px; font-weight:600; letter-spacing:-0.02em;">N°{{ ed.w }}</span>
+              <span style="font-family:var(--font-mono); font-size:12px; color:var(--ink-2);">{{ ed.range }}</span>
+              <span style="font-size:14px; color:var(--ink-2); line-height:1.4;">{{ ed.note }}</span>
+              <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-3); text-align:right;">{{ ed.n }} ART. ↗</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ========= SÉLECTIONS ========= -->
+    <sc-if value="{{ isSelections }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <header style="padding-bottom:24px; border-bottom:1px solid var(--ink); margin-bottom:40px;">
+          <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.22em; color:var(--ink-2); text-transform:uppercase;">Vos articles gardés</div>
+          <h1 style="font-size:52px; font-weight:600; letter-spacing:-0.035em; line-height:.95; margin:12px 0 0 0;">Sélections <span style="color:var(--ink-3); font-size:30px;">{{ selectionsCount }}</span></h1>
+        </header>
+        <sc-if value="{{ selectionsEmpty }}" hint-placeholder-val="{{ true }}">
+          <div style="border:1px dashed var(--line-2); border-radius:4px; padding:64px 40px; text-align:center;">
+            <div style="font-family:var(--font-mono); font-size:13px; color:var(--ink-2); letter-spacing:0.04em;">AUCUN ARTICLE GARDÉ</div>
+            <p style="font-size:15px; color:var(--ink-3); margin:12px auto 0; max-width:42ch; line-height:1.5;">Utilisez le bouton ＋ Garder sur n’importe quelle carte pour constituer votre sélection de la semaine.</p>
+          </div>
+        </sc-if>
+        <div>
+          <sc-for list="{{ selections }}" as="a" hint-placeholder-count="0">
+            <div style="display:grid; grid-template-columns:62px 152px 1fr auto auto; align-items:center; gap:20px; padding:16px 8px; margin:0 -8px; border-bottom:1px solid var(--line);" style-hover="background:rgba(0,0,0,0.025);">
+              <span style="font-family:var(--font-mono); font-size:12px; color:var(--ink-3);">{{ a.date }}</span>
+              <button onClick="{{ a.openSector }}" style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.08em; color:var(--ink-2); text-align:left;">{{ a.num }} · {{ a.sector }}</button>
+              <a href="{{ a.url }}" target="_blank" rel="noopener" style="font-size:16px; font-weight:500; letter-spacing:-0.015em; line-height:1.25;">{{ a.title }}</a>
+              <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2); white-space:nowrap;">{{ a.source }}</span>
+              <button onClick="{{ a.toggle }}" style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.04em; text-transform:uppercase; color:var(--accent);">● Retirer</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ========= SECTEUR ========= -->
+    <sc-if value="{{ isSector }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <header style="padding-bottom:26px; border-bottom:1px solid var(--ink); margin-bottom:36px; display:flex; align-items:flex-end; justify-content:space-between; gap:30px; flex-wrap:wrap;">
+          <div>
+            <div style="font-family:var(--font-mono); font-size:14px; letter-spacing:0.1em; color:var(--ink-3);">SECTEUR {{ secInfo.n }}</div>
+            <h1 style="font-size:52px; font-weight:600; letter-spacing:-0.035em; line-height:.95; margin:10px 0 0 0;">{{ secInfo.label }}</h1>
+            <p style="font-size:15px; color:var(--ink-2); margin:14px 0 0 0;">{{ secInfo.desc }}</p>
+          </div>
+          <div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2); text-align:right; line-height:1.8;">
+            <div style="color:var(--ink); font-size:13px;">{{ secCount }} articles</div>
+            <div>Semaine N°24</div>
+          </div>
+        </header>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <sc-for list="{{ secPaged }}" as="a" hint-placeholder-count="4">
+            <article style="border:1px solid var(--line); border-radius:4px; background:var(--surface); padding:22px; display:flex; flex-direction:column; min-height:180px;" style-hover="border-color:var(--ink);">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+                <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; color:var(--ink-2);">{{ a.source }} · {{ a.date }}</span>
+                <button onClick="{{ a.toggle }}" style="font-family:var(--font-mono); font-size:13px; color:var(--ink-3);" style-hover="color:var(--accent);">
+                  <sc-if value="{{ a.marked }}" hint-placeholder-val="{{ false }}"><span style="color:var(--accent);">●</span></sc-if>
+                  <sc-if value="{{ a.notMarked }}" hint-placeholder-val="{{ true }}"><span>＋</span></sc-if>
+                </button>
+              </div>
+              <a href="{{ a.url }}" target="_blank" rel="noopener">
+                <h3 style="font-size:21px; font-weight:600; letter-spacing:-0.02em; line-height:1.14; margin:0;">{{ a.title }}</h3>
+              </a>
+              <p style="font-size:14px; line-height:1.5; color:var(--ink-2); margin:12px 0 0 0;">{{ a.e }}</p>
+              <div style="flex:1; min-height:14px;"></div>
+              <a href="{{ a.url }}" target="_blank" rel="noopener" style="padding-top:14px; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:11px; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-2);" style-hover="color:var(--accent);">Lire la source ↗</a>
+            </article>
+          </sc-for>
+        </div>
+        <sc-if value="{{ hasPager }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; align-items:center; gap:8px; margin-top:34px; font-family:var(--font-mono);">
+            <span style="font-size:10px; letter-spacing:0.14em; color:var(--ink-3); text-transform:uppercase; margin-right:6px;">Page</span>
+            <sc-for list="{{ pageItems }}" as="pg" hint-placeholder-count="2">
+              <button onClick="{{ pg.go }}" style="width:34px; height:34px; border:1px solid var(--line-2); border-radius:3px; font-size:12px; color:{{ pg.txt }}; background:{{ pg.active }};" style-hover="border-color:var(--ink);">{{ pg.label }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ========= SYSTÈME (spec) ========= -->
+    <sc-if value="{{ isSystem }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <header style="padding-bottom:24px; border-bottom:1px solid var(--ink); margin-bottom:44px;">
+          <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.22em; color:var(--ink-2); text-transform:uppercase;">Direction de design · handoff</div>
+          <h1 style="font-size:52px; font-weight:600; letter-spacing:-0.035em; line-height:.95; margin:12px 0 0 0;">Système</h1>
+          <p style="font-size:15px; color:var(--ink-2); margin:14px 0 0 0; max-width:62ch; line-height:1.55;">Spécifications à transmettre pour l’implémentation Next.js + Tailwind. Les valeurs ci-dessous sont les tokens exacts utilisés dans cette maquette.</p>
+        </header>
+
+        <!-- palette -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;"><span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">01 · Palette</span><span style="flex:1; height:1px; background:var(--line);"></span></div>
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:54px;">
+          <div style="border:1px solid var(--line); border-radius:4px; overflow:hidden;"><div style="height:80px; background:#F4F3EF;"></div><div style="padding:10px 12px;"><div style="font-size:13px; font-weight:600;">paper</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#F4F3EF</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:4px; overflow:hidden;"><div style="height:80px; background:#FFFFFF; border-bottom:1px solid var(--line);"></div><div style="padding:10px 12px;"><div style="font-size:13px; font-weight:600;">surface</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#FFFFFF</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:4px; overflow:hidden;"><div style="height:80px; background:#15140F;"></div><div style="padding:10px 12px;"><div style="font-size:13px; font-weight:600;">ink</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#15140F</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:4px; overflow:hidden;"><div style="height:80px; background:#6E6C64;"></div><div style="padding:10px 12px;"><div style="font-size:13px; font-weight:600;">ink-2</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#6E6C64</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:4px; overflow:hidden;"><div style="height:80px; background:#A6A39A;"></div><div style="padding:10px 12px;"><div style="font-size:13px; font-weight:600;">ink-3</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#A6A39A</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:4px; overflow:hidden;"><div style="height:80px; background:#E3E1DA;"></div><div style="padding:10px 12px;"><div style="font-size:13px; font-weight:600;">line</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#E3E1DA</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:4px; overflow:hidden;"><div style="height:80px; background:#CECBC1;"></div><div style="padding:10px 12px;"><div style="font-size:13px; font-weight:600;">line-2</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#CECBC1</div></div></div>
+          <div style="border:1px solid var(--accent); border-radius:4px; overflow:hidden;"><div style="height:80px; background:var(--accent);"></div><div style="padding:10px 12px;"><div style="font-size:13px; font-weight:600;">accent</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#2236E8 · parcimonie</div></div></div>
+        </div>
+
+        <!-- typographie -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;"><span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">02 · Typographie — {{ fontName }} / {{ monoName }}</span><span style="flex:1; height:1px; background:var(--line);"></span></div>
+        <div style="border:1px solid var(--line); border-radius:4px; background:var(--surface); margin-bottom:54px;">
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--line);"><span style="font-size:48px; font-weight:600; letter-spacing:-0.035em;">Display 52/600</span><span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">titres de page · tracking −0.035em</span></div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--line);"><span style="font-size:21px; font-weight:600; letter-spacing:-0.02em;">Titre carte 19–21/600</span><span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">line-height 1.15</span></div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--line);"><span style="font-size:15px; color:var(--ink-2);">Corps & extrait 14–16/400 · ink-2 · interligne 1.55</span><span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">max 46ch</span></div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:18px 22px;"><span style="font-family:var(--font-mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-2);">META · MONO 10–12 · UPPER · +0.06em</span><span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">dates, labels, numéros</span></div>
+        </div>
+
+        <!-- secteurs -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;"><span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">03 · Différenciation secteurs — sans couleur</span><span style="flex:1; height:1px; background:var(--line);"></span></div>
+        <div style="border:1px solid var(--line); border-radius:4px; background:var(--surface); padding:22px; margin-bottom:54px;">
+          <p style="font-size:14px; color:var(--ink-2); margin:0 0 18px 0; line-height:1.55; max-width:70ch;">Chaque secteur est identifié par un <strong style="color:var(--ink); font-weight:600;">numéro à deux chiffres + un label monospace en capitales</strong>. Pas de couleur dédiée : la hiérarchie repose sur la numérotation, le filet et le poids typographique. L’accent unique reste réservé aux états (actif, lien survolé, focus).</p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:3px; padding:6px 12px;">01 · LUXE</span>
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:3px; padding:6px 12px;">02 · ART & CULTURE</span>
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:3px; padding:6px 12px;">03 · COMMUNICATION</span>
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:3px; padding:6px 12px;">04 · SPIRITUEUX</span>
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:3px; padding:6px 12px;">05 · WEB & DIGITAL</span>
+          </div>
+        </div>
+
+        <!-- tailwind config -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;"><span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">04 · tailwind.config — extrait</span><span style="flex:1; height:1px; background:var(--line);"></span></div>
+        <pre style="border:1px solid var(--line); border-radius:4px; background:#15140F; color:#E8E6DF; font-family:var(--font-mono); font-size:12px; line-height:1.7; padding:22px; overflow-x:auto; margin:0;">theme.extend = {
+  colors: {
+    paper:  '#F4F3EF',  surface: '#FFFFFF',
+    ink:    '#15140F',  'ink-2': '#6E6C64',  'ink-3': '#A6A39A',
+    line:   '#E3E1DA',  'line-2':'#CECBC1',  accent:  '#2236E8',
+  },
+  fontFamily: {
+    sans: ['Schibsted Grotesk', 'sans-serif'],
+    mono: ['JetBrains Mono', 'monospace'],
+  },
+  borderRadius: { card: '4px' },
+  letterSpacing: { tightest: '-0.035em', tight: '-0.02em', meta: '0.06em' },
+}
+// Carte : border border-line rounded-card bg-surface hover:border-ink (aucune ombre)
+// Meta  : font-mono text-[11px] uppercase tracking-meta text-ink-2</pre>
+      </div>
+    </sc-if>
+
+  </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:920},&quot;typeface&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;],&quot;default&quot;:&quot;B&quot;,&quot;tsType&quot;:&quot;'A'|'B'|'C'&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;blue&quot;,&quot;rust&quot;,&quot;mono&quot;],&quot;default&quot;:&quot;blue&quot;,&quot;tsType&quot;:&quot;'blue'|'rust'|'mono'&quot;},&quot;showTrends&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  rootRef = React.createRef();
+
+  FONTS = {
+    A: { sans: "'Space Grotesk',-apple-system,sans-serif", mono: "'Space Mono',monospace", name: 'Space Grotesk', mname: 'Space Mono' },
+    B: { sans: "'Schibsted Grotesk',-apple-system,sans-serif", mono: "'JetBrains Mono',monospace", name: 'Schibsted Grotesk', mname: 'JetBrains Mono' },
+    C: { sans: "'Hanken Grotesk',-apple-system,sans-serif", mono: "'IBM Plex Mono',monospace", name: 'Hanken Grotesk', mname: 'IBM Plex Mono' }
+  };
+  ACCENTS = { blue: '#2236E8', rust: '#B8431F', mono: '#15140F' };
+
+  SECTORS = [
+    { idx: 1, n: '01', key: 'luxe', label: 'LUXE', desc: 'Maisons, savoir-faire, retail & désir.' },
+    { idx: 2, n: '02', key: 'art', label: 'ART & CULTURE', desc: 'Institutions, expositions, marché de l’art.' },
+    { idx: 3, n: '03', key: 'com', label: 'COMMUNICATION', desc: 'Campagnes, agences, médias & influence.' },
+    { idx: 4, n: '04', key: 'spiritueux', label: 'SPIRITUEUX', desc: 'Vins, spiritueux & art de recevoir.' },
+    { idx: 5, n: '05', key: 'web', label: 'WEB & DIGITAL', desc: 'Produit, IA, design d’interface & tech.' }
+  ];
+
+  SRC_URL = {
+    'Business of Fashion': 'https://www.businessoffashion.com', 'Les Échos': 'https://www.lesechos.fr',
+    'Vogue Business': 'https://www.voguebusiness.com', 'Le Journal du Luxe': 'https://journalduluxe.fr',
+    "L'ADN": 'https://www.ladn.eu', 'Beaux-Arts': 'https://www.beauxarts.com', 'Le Monde': 'https://www.lemonde.fr',
+    'Télérama': 'https://www.telerama.fr', "Le Quotidien de l'Art": 'https://www.lequotidiendelart.com',
+    'Stratégies': 'https://www.strategies.fr', 'CB News': 'https://www.cbnews.fr', 'La Réclame': 'https://lareclame.fr',
+    'Influencia': 'https://www.influencia.net', 'LSA': 'https://www.lsa-conso.fr',
+    'La Revue du Vin de France': 'https://www.larvf.com', 'Le Figaro': 'https://www.lefigaro.fr',
+    'Terre de Vins': 'https://www.terredevins.com', 'TechCrunch': 'https://techcrunch.com',
+    "It's Nice That": 'https://www.itsnicethat.com', 'Smashing Magazine': 'https://www.smashingmagazine.com',
+    'Figma Blog': 'https://www.figma.com/blog', 'The Verge': 'https://www.theverge.com'
+  };
+
+  ARTICLES = [
+    // 01 LUXE
+    { id: 'l1', sec: 1, kind: 'phare', title: 'Bottega Veneta quitte les réseaux sociaux et mise sur l’intimité', source: 'Business of Fashion', date: '16.06', e: 'La maison ferme ses comptes publics pour concentrer sa relation client sur des cercles privés et le print.' },
+    { id: 'l2', sec: 1, kind: 'liste', title: 'LVMH structure une cellule IA créative interne', source: 'Les Échos', date: '15.06', e: 'Un studio transversal pour outiller les directions artistiques des maisons du groupe.' },
+    { id: 'l3', sec: 1, kind: 'liste', title: 'Jacquemus ouvre un café-concept rue Saint-Honoré', source: 'Vogue Business', date: '17.06', e: 'Le créateur prolonge son univers en lieu de vie, entre retail et hospitalité.' },
+    { id: 'l4', sec: 1, kind: 'pool', title: 'Le quiet luxury cède la place au « loud craft »', source: 'Le Journal du Luxe', date: '14.06', e: 'Retour du geste artisanal visible et revendiqué comme signe de valeur.' },
+    { id: 'l5', sec: 1, kind: 'pool', title: 'Cartier numérise un siècle d’archives joaillières', source: "L'ADN", date: '12.06', e: 'Un fonds de dessins ouvert aux chercheurs et aux ateliers de création.' },
+    { id: 'l6', sec: 1, kind: 'pool', title: 'Loro Piana mise sur la traçabilité par blockchain', source: 'Business of Fashion', date: '11.06', e: 'Chaque pièce embarque un certificat numérique de provenance des fibres.' },
+    // 02 ART & CULTURE
+    { id: 'a1', sec: 2, kind: 'phare', title: 'La Bourse de Commerce consacre une saison à l’IA générative', source: 'Beaux-Arts', date: '16.06', e: 'Une programmation qui interroge l’auteur, la copie et la valeur à l’ère des modèles.' },
+    { id: 'a2', sec: 2, kind: 'liste', title: 'Le Centre Pompidou programme ses années de fermeture hors-les-murs', source: 'Le Monde', date: '15.06', e: 'Collections itinérantes et résidences le temps d’un chantier de cinq ans.' },
+    { id: 'a3', sec: 2, kind: 'liste', title: 'Les musées parisiens unifient leur billetterie', source: 'Télérama', date: '13.06', e: 'Un passe commun et une interface repensée pour fluidifier la visite.' },
+    { id: 'a4', sec: 2, kind: 'pool', title: 'Art Basel teste un parcours augmenté', source: "Le Quotidien de l'Art", date: '12.06', e: 'Une couche numérique discrète pour documenter les œuvres sans écran omniprésent.' },
+    { id: 'a5', sec: 2, kind: 'pool', title: 'Une fondation rachète un fonds photographique inédit', source: 'Beaux-Arts', date: '10.06', e: 'Plusieurs milliers de tirages d’un reporter des années 70 entrent en collection.' },
+    // 03 COMMUNICATION
+    { id: 'c0', sec: 3, kind: 'hero', title: 'Cannes Lions 2026 : la première campagne 100 % générée par IA remporte un Lion d’Or', source: 'Stratégies', date: '17.06', e: 'Conçue, scénarisée et produite par des modèles, la campagne relance le débat sur la signature créative et l’attribution. Le jury salue « une maîtrise de l’intention plus que de l’outil ».' },
+    { id: 'c1', sec: 3, kind: 'phare', title: 'Le Grand Prix récompense une campagne sans aucun visuel', source: 'CB News', date: '16.06', e: 'Une prise de parole entièrement typographique, portée par le rythme et le copywriting.' },
+    { id: 'c2', sec: 3, kind: 'liste', title: 'TikTok teste un format éditorial long', source: 'Influencia', date: '14.06', e: 'La plateforme courtise les marques premium avec un récit posé et chapitré.' },
+    { id: 'c3', sec: 3, kind: 'pool', title: 'Les agences indépendantes se regroupent en collectif', source: 'La Réclame', date: '15.06', e: 'Mutualiser la production sans perdre la signature : un pari de structure.' },
+    { id: 'c4', sec: 3, kind: 'pool', title: 'L’email retrouve la faveur des annonceurs premium', source: 'Stratégies', date: '12.06', e: 'Le canal possédé redevient un terrain d’expression éditoriale soignée.' },
+    { id: 'c5', sec: 3, kind: 'pool', title: 'La RSE s’impose comme critère de pitch', source: 'CB News', date: '11.06', e: 'Les annonceurs notent désormais l’empreinte des productions au même titre que l’idée.' },
+    // 04 SPIRITUEUX
+    { id: 's1', sec: 4, kind: 'phare', title: 'Maison Ferrand relance un cognac oublié de 1947', source: 'La Revue du Vin de France', date: '16.06', e: 'Un assemblage retrouvé en archives, réédité en série numérotée très confidentielle.' },
+    { id: 's2', sec: 4, kind: 'liste', title: 'Diageo investit dans le no-low premium', source: 'LSA', date: '15.06', e: 'Les alternatives sans alcool montent en gamme et en exigence de goût.' },
+    { id: 's3', sec: 4, kind: 'liste', title: 'Ruinart confie sa direction artistique à un duo', source: 'Le Figaro', date: '13.06', e: 'Un binôme design + scénographie pour réécrire le rituel de dégustation.' },
+    { id: 's4', sec: 4, kind: 'pool', title: 'Le mezcal artisanal perce à Paris', source: 'Terre de Vins', date: '12.06', e: 'Petits producteurs et traçabilité agave séduisent une clientèle curieuse.' },
+    { id: 's5', sec: 4, kind: 'pool', title: 'Une distillerie normande décroche une médaille internationale', source: 'Terre de Vins', date: '10.06', e: 'Le whisky français confirme sa montée en crédibilité à l’export.' },
+    // 05 WEB & DIGITAL
+    { id: 'w1', sec: 5, kind: 'phare', title: 'Figma rachète un studio de motion pour intégrer l’animation IA', source: 'TechCrunch', date: '16.06', e: 'L’éditeur veut générer des transitions et micro-interactions directement dans le canevas.' },
+    { id: 'w2', sec: 5, kind: 'liste', title: 'Une typographie variable open-source fait le buzz', source: "It's Nice That", date: '15.06', e: 'Un caractère dont l’axe « grain » simule l’impression, repris par des dizaines de studios.' },
+    { id: 'w3', sec: 5, kind: 'liste', title: 'Le « slow web » inspire une vague de sites éditoriaux', source: 'Smashing Magazine', date: '14.06', e: 'Moins de scroll infini, plus de pages tenues et de lecture délibérée.' },
+    { id: 'w4', sec: 5, kind: 'pool', title: 'Les design systems intègrent des tokens génératifs', source: 'Figma Blog', date: '12.06', e: 'Des variables pilotées par règles plutôt que figées, pour des thèmes vivants.' },
+    { id: 'w5', sec: 5, kind: 'pool', title: 'WebGPU démocratise la 3D temps réel dans le navigateur', source: 'The Verge', date: '11.06', e: 'Des expériences riches sans plug-in, à portée des sites de marque.' }
+  ];
+
+  ARCHIVES = [
+    { w: '23', range: '08 \u2192 14 JUIN 2026', n: 26, note: 'IA à Cannes, retail expérientiel, no-low premium' },
+    { w: '22', range: '01 \u2192 07 JUIN 2026', n: 24, note: 'Saison muséale, packaging spiritueux, slow web' },
+    { w: '21', range: '25 \u2192 31 MAI 2026', n: 28, note: 'Maisons & IA, typographies variables, RSE' },
+    { w: '20', range: '18 \u2192 24 MAI 2026', n: 23, note: 'Retail hybride, marché de l’art, WebGPU' },
+    { w: '19', range: '11 \u2192 17 MAI 2026', n: 25, note: 'Loud craft, billetterie unifiée, motion design' },
+    { w: '18', range: '04 \u2192 10 MAI 2026', n: 22, note: 'Quiet luxury, fondations, collectifs d’agences' },
+    { w: '17', range: '27 AVR \u2192 03 MAI 2026', n: 27, note: 'Traçabilité, expositions augmentées, email' },
+    { w: '16', range: '20 \u2192 26 AVRIL 2026', n: 24, note: 'Archives joaillières, mezcal, design systems' },
+    { w: '15', range: '13 \u2192 19 AVRIL 2026', n: 21, note: 'Hospitalité de marque, whisky français, IA produit' },
+    { w: '14', range: '06 \u2192 12 AVRIL 2026', n: 23, note: 'Direction artistique, médias, interface lente' }
+  ];
+
+  state = { view: 'home', activeSector: 1, secPage: 1, typeface: 'B', accent: 'blue', marks: [] };
+
+  componentDidMount() { this.applyTheme(); }
+  componentDidUpdate() { this.applyTheme(); }
+  applyTheme() {
+    const r = this.rootRef && this.rootRef.current; if (!r) return;
+    const tf = this.props.typeface ?? this.state.typeface;
+    const f = this.FONTS[tf] || this.FONTS.B;
+    r.style.setProperty('--font-sans', f.sans);
+    r.style.setProperty('--font-mono', f.mono);
+    r.style.setProperty('--accent', this.ACCENTS[this.props.accent ?? this.state.accent] || this.ACCENTS.blue);
+  }
+
+  setView(v) { this.setState({ view: v }); window.scrollTo(0, 0); }
+  openSector(idx) { this.setState({ view: 'sector', activeSector: idx, secPage: 1 }); window.scrollTo(0, 0); }
+  setFont(k) { this.setState({ typeface: k }); }
+  setPage(p) { this.setState({ secPage: p }); window.scrollTo(0, 0); }
+  toggleMark(id) {
+    this.setState(s => ({ marks: s.marks.includes(id) ? s.marks.filter(x => x !== id) : [...s.marks, id] }));
+  }
+
+  dec(a) {
+    const s = this.SECTORS[a.sec - 1];
+    const marked = this.state.marks.includes(a.id);
+    return { ...a, num: s.n, sector: s.label, key: s.key, url: this.SRC_URL[a.source] || '#',
+      marked, notMarked: !marked, toggle: () => this.toggleMark(a.id), openSector: () => this.openSector(a.sec) };
+  }
+
+  renderVals() {
+    const tf = this.props.typeface ?? this.state.typeface;
+    const f = this.FONTS[tf] || this.FONTS.B;
+    const all = this.ARTICLES.map(a => this.dec(a));
+    const view = this.state.view;
+    const hero = all.find(a => a.kind === 'hero');
+    const phares = this.SECTORS.map(s => all.find(a => a.sec === s.idx && a.kind === 'phare')).filter(Boolean);
+    const secondary = all.filter(a => a.kind === 'liste');
+    const selections = all.filter(a => a.marked);
+
+    // sector page
+    const activeSector = this.state.activeSector;
+    const secInfo = this.SECTORS[activeSector - 1];
+    const secAll = all.filter(a => a.sec === activeSector);
+    const perPage = 4;
+    const total = Math.max(1, Math.ceil(secAll.length / perPage));
+    const page = Math.min(this.state.secPage, total);
+    const secPaged = secAll.slice((page - 1) * perPage, page * perPage);
+    const pageItems = Array.from({ length: total }, (_, i) => ({ p: i + 1, label: String(i + 1).padStart(2, '0'), active: (i + 1) === page ? 'var(--ink)' : 'transparent', txt: (i + 1) === page ? '#fff' : 'var(--ink)', go: () => this.setPage(i + 1) }));
+
+    const fontOptions = ['A', 'B', 'C'].map(k => ({ k, active: k === tf, name: this.FONTS[k].name, pick: () => this.setFont(k) }));
+
+    const navItems = [
+      { id: 'home', label: 'Cette semaine', active: view === 'home' ? 'var(--accent)' : 'transparent', go: () => this.setView('home') },
+      { id: 'archives', label: 'Archives', active: view === 'archives' ? 'var(--accent)' : 'transparent', go: () => this.setView('archives') },
+      { id: 'selections', label: 'Sélections', active: view === 'selections' ? 'var(--accent)' : 'transparent', go: () => this.setView('selections'), count: selections.length || null }
+    ];
+    const sidebarSectors = this.SECTORS.map(s => ({ ...s, active: view === 'sector' && activeSector === s.idx, go: () => this.openSector(s.idx) }));
+
+    return {
+      rootRef: this.rootRef,
+      isHome: view === 'home', isArchives: view === 'archives', isSelections: view === 'selections',
+      isSector: view === 'sector', isSystem: view === 'system',
+      navItems, sidebarSectors, fontOptions, fontName: f.name, monoName: f.mname,
+      goSystem: () => this.setView('system'),
+      // home
+      hero, heroToggle: hero ? hero.toggle : null, heroMarked: hero ? hero.marked : false, heroNotMarked: hero ? !hero.marked : true,
+      phares, secondary, totalArticles: this.ARTICLES.length, totalTrends: 5,
+      showTrends: this.props.showTrends ?? true,
+      // archives
+      archives: this.ARCHIVES,
+      // selections
+      selections, selectionsEmpty: selections.length === 0, selectionsCount: selections.length,
+      // sector
+      secInfo, secCount: secAll.length, secPaged, pageItems, hasPager: total > 1
+    };
+  }
+}
+</script>
+</body>
+</html>

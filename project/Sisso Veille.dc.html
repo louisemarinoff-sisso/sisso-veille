@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@1,6..72,300;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<script src="image-slot.js"></script>
+<style>
+  @font-face { font-family: 'Neue Haas Display'; src: url('NeueHaasDisplayLight.ttf') format('truetype'); font-weight: 100 900; font-style: normal; font-display: swap; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #14130F; }
+  ::selection { background: #F3F1EC; color: #14130F; }
+  a { text-decoration: none; color: inherit; }
+  button { font: inherit; cursor: pointer; border: none; background: none; padding: 0; color: inherit; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: #c9c5bb; border-radius: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  .sv-hscroll { scrollbar-width: none; }
+  .sv-hscroll::-webkit-scrollbar { display: none; }
+  @keyframes svblink { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+  .sv-card { transition: transform .55s cubic-bezier(.2,.8,.2,1), box-shadow .55s cubic-bezier(.2,.8,.2,1); }
+  .sv-card:hover { transform: translateY(-7px); box-shadow: 0 34px 64px -34px rgba(20,19,15,.45); }
+  .sv-zoom { transition: transform .8s cubic-bezier(.2,.8,.2,1); will-change: transform; }
+  .sv-card:hover .sv-zoom { transform: scale(1.055); }
+  .sv-arrow { opacity: 0; transform: translateY(10px) rotate(-8deg); transition: opacity .45s, transform .45s cubic-bezier(.2,.8,.2,1); }
+  .sv-card:hover .sv-arrow { opacity: 1; transform: translateY(0) rotate(0); }
+  .sv-hero:hover .sv-zoom { transform: scale(1.04); }
+  .sv-uline { background-image: linear-gradient(currentColor,currentColor); background-size: 0% 1.5px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size .4s cubic-bezier(.2,.8,.2,1); }
+  .sv-uline:hover { background-size: 100% 1.5px; }
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="--frame:#14130F; --canvas:#F3F1EC; --taupe:#ABA295; --ink:#16150F; --ink-2:#6E6B62; --ink-3:#A7A399; --on-dark:#F4F2EC; --line:#E1DFD8; --line-2:#CDCAC0; --accent:#2236E8; --font-sans:'Neue Haas Display','Schibsted Grotesk',-apple-system,sans-serif; --font-mono:'JetBrains Mono',monospace; --font-sub:'Swear Display','Newsreader',Georgia,serif; background:var(--frame); padding:14px; min-height:100vh; font-family:var(--font-sans); color:var(--ink); font-weight:300; -webkit-font-smoothing:antialiased; letter-spacing:-0.005em;">
+  <div style="background:var(--canvas); border-radius:26px; min-height:calc(100vh - 28px); padding:20px 22px 26px; overflow:hidden;">
+
+    <!-- ===== TOP NAV ===== -->
+    <nav style="display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:24px; padding:8px 12px 22px;">
+      <button onClick="{{ goHome }}" style="text-align:left; justify-self:start; display:flex; align-items:baseline; gap:11px;">
+        <span style="font-size:23px; font-weight:400; letter-spacing:0.05em; line-height:1; text-transform:uppercase;">SISSO VEILLE</span>
+        <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; color:var(--ink-3); text-transform:uppercase;">®</span>
+      </button>
+      <div style="justify-self:center; font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; color:var(--ink-2); text-transform:uppercase; text-align:center;">Édition N°24 — 15 → 21 Juin 2026</div>
+      <div style="justify-self:end; display:flex; align-items:center; gap:26px;">
+        <sc-for list="{{ primaryNav }}" as="item" hint-placeholder-count="3">
+          <button onClick="{{ item.go }}" class="sv-uline" style="font-size:14px; font-weight:500; color:{{ item.color }}; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;">
+            {{ item.label }}
+            <sc-if value="{{ item.count }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-mono); font-size:10px; border:1px solid var(--line-2); border-radius:20px; padding:1px 6px; color:var(--ink);">{{ item.count }}</span></sc-if>
+          </button>
+        </sc-for>
+      </div>
+    </nav>
+
+    <!-- ============================ HOME ============================ -->
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <!-- HERO -->
+        <a href="{{ hero.url }}" target="_blank" rel="noopener" class="sv-card sv-hero" style="display:block; position:relative; height:66vh; min-height:540px; border-radius:22px; overflow:hidden; background:#262219;">
+          <image-slot id="sv-hero" shape="rect" src="https://picsum.photos/seed/sisso-hero-cannes/1700/1050?grayscale" placeholder="Glisser l’image à la une" style="position:absolute; inset:0; width:100%; height:100%;" class="sv-zoom"></image-slot>
+          <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,19,15,0.5) 0%, rgba(20,19,15,0.28) 30%, rgba(20,19,15,0.42) 60%, rgba(20,19,15,0.92) 100%); pointer-events:none;"></div>
+          <div style="position:absolute; inset:0; padding:38px 42px; display:flex; flex-direction:column; justify-content:space-between; color:var(--on-dark);">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; background:rgba(243,241,236,0.14); backdrop-filter:blur(6px); padding:7px 13px; border-radius:30px; border:1px solid rgba(243,241,236,0.25);">Semaine N°24 — À la une</span>
+              <button onClick="{{ heroToggle }}" style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; background:rgba(243,241,236,0.12); backdrop-filter:blur(6px); padding:9px 15px; border-radius:30px; border:1px solid rgba(243,241,236,0.25); color:var(--on-dark);">
+                <sc-if value="{{ heroMarked }}" hint-placeholder-val="{{ false }}"><span>● Sauvé</span></sc-if>
+                <sc-if value="{{ heroNotMarked }}" hint-placeholder-val="{{ true }}"><span>＋ Garder</span></sc-if>
+              </button>
+            </div>
+            <div style="max-width:1000px;">
+              <div style="font-family:var(--font-mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; opacity:.82; margin-bottom:16px;">{{ hero.num }} · {{ hero.sector }} &nbsp;—&nbsp; {{ hero.source }} · {{ hero.date }}</div>
+              <h1 style="font-family:var(--font-sans); font-size:clamp(38px, 5.4vw, 82px); font-weight:300; letter-spacing:0.01em; line-height:1.02; margin:0; text-wrap:balance; text-transform:uppercase;">{{ hero.title }}</h1>
+              <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:30px; margin-top:22px;">
+                <p style="font-family:var(--font-sub); font-style:italic; font-size:21px; line-height:1.4; opacity:.92; margin:0; max-width:54ch;">{{ hero.e }}</p>
+                <span class="sv-uline" style="font-family:var(--font-mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; font-weight:500;">Lire l’article ↗</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- SECTOR CHIPS -->
+        <div class="sv-hscroll" style="display:flex; gap:10px; overflow-x:auto; padding:28px 2px 6px;">
+          <sc-for list="{{ sectorChips }}" as="s" hint-placeholder-count="5">
+            <button onClick="{{ s.go }}" style="flex:none; display:flex; align-items:center; gap:9px; padding:11px 18px; border:1px solid var(--line-2); border-radius:40px; background:var(--canvas);" style-hover="border-color:var(--ink); background:#fff;">
+              <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-3);">{{ s.n }}</span>
+              <span style="font-size:13.5px; font-weight:500; letter-spacing:0.01em;">{{ s.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <!-- PHARES — animated horizontal cards -->
+        <section style="margin-top:52px;">
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:24px;">
+            <div>
+              <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-2);">L’essentiel par secteur</div>
+              <h2 style="font-size:34px; font-weight:300; letter-spacing:0.015em; margin:8px 0 0 0; text-transform:uppercase;">Cinq phares, cinq lectures</h2>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button onClick="{{ phPrev }}" style="width:48px; height:48px; border:1px solid var(--line-2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px;" style-hover="border-color:var(--ink); background:#fff;">‹</button>
+              <button onClick="{{ phNext }}" style="width:48px; height:48px; border:1px solid var(--line-2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px;" style-hover="border-color:var(--ink); background:#fff;">›</button>
+            </div>
+          </div>
+          <div ref="{{ phareRowRef }}" class="sv-hscroll" style="display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory; padding:8px 2px 14px; margin:0 -2px;">
+            <sc-for list="{{ phares }}" as="a" hint-placeholder-count="5">
+              <a href="{{ a.url }}" target="_blank" rel="noopener" class="sv-card" style="flex:none; width:372px; height:464px; scroll-snap-align:start; position:relative; overflow:hidden; border-radius:22px; background:var(--taupe); color:#1b1812; padding:28px; display:flex; flex-direction:column;">
+                <span style="position:absolute; right:-8px; top:-46px; font-size:230px; font-weight:800; line-height:1; color:rgba(27,24,18,0.07); letter-spacing:-0.04em; pointer-events:none;">{{ a.num }}</span>
+                <div style="position:relative; display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase;">{{ a.num }} · {{ a.sector }}</span>
+                  <button onClick="{{ a.toggle }}" style="font-family:var(--font-mono); font-size:13px; line-height:1; color:#1b1812;">
+                    <sc-if value="{{ a.marked }}" hint-placeholder-val="{{ false }}"><span>●</span></sc-if>
+                    <sc-if value="{{ a.notMarked }}" hint-placeholder-val="{{ true }}"><span>＋</span></sc-if>
+                  </button>
+                </div>
+                <h3 style="position:relative; font-size:27px; font-weight:600; letter-spacing:-0.025em; line-height:1.12; margin:26px 0 0 0; text-wrap:balance;">{{ a.title }}</h3>
+                <p style="position:relative; font-size:14px; line-height:1.5; margin:14px 0 0 0; color:#3a362c;">{{ a.e }}</p>
+                <div style="flex:1;"></div>
+                <div style="position:relative; display:flex; align-items:flex-end; justify-content:space-between;">
+                  <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:#3a362c;">{{ a.source }} · {{ a.date }}</span>
+                  <span class="sv-arrow" style="width:42px; height:42px; border-radius:50%; background:#1b1812; color:var(--canvas); display:flex; align-items:center; justify-content:center; font-size:16px;">↗</span>
+                </div>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- EN BREF -->
+        <section style="margin-top:60px;">
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:22px;">
+            <div>
+              <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-2);">En bref</div>
+              <h2 style="font-size:34px; font-weight:300; letter-spacing:0.015em; margin:8px 0 0 0; text-transform:uppercase;">Le reste de la semaine</h2>
+            </div>
+          </div>
+          <div style="background:#fff; border:1px solid var(--line); border-radius:22px; padding:10px 26px;">
+            <sc-for list="{{ secondary }}" as="a" hint-placeholder-count="6">
+              <a href="{{ a.url }}" target="_blank" rel="noopener" style="display:grid; grid-template-columns:66px 168px 1fr auto; align-items:center; gap:24px; padding:21px 0; border-bottom:1px solid var(--line);" style-hover="opacity:.62;">
+                <span style="font-family:var(--font-mono); font-size:12px; color:var(--ink-3);">{{ a.date }}</span>
+                <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.08em; color:var(--ink-2);">{{ a.num }} · {{ a.sector }}</span>
+                <span style="font-size:19px; font-weight:500; letter-spacing:-0.02em; line-height:1.25;">{{ a.title }}</span>
+                <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2); text-align:right; white-space:nowrap;">{{ a.source }} ↗</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- CAHIER DES TENDANCES -->
+        <sc-if value="{{ showTrends }}" hint-placeholder-val="{{ true }}">
+        <section style="margin-top:60px;">
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:24px;">
+            <div>
+              <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-2);">Cahier des tendances</div>
+              <h2 style="font-size:34px; font-weight:300; letter-spacing:0.015em; margin:8px 0 0 0; text-transform:uppercase;">Un projet créatif par secteur</h2>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button onClick="{{ trPrev }}" style="width:48px; height:48px; border:1px solid var(--line-2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px;" style-hover="border-color:var(--ink); background:#fff;">‹</button>
+              <button onClick="{{ trNext }}" style="width:48px; height:48px; border:1px solid var(--line-2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px;" style-hover="border-color:var(--ink); background:#fff;">›</button>
+            </div>
+          </div>
+          <div ref="{{ trendRowRef }}" class="sv-hscroll" style="display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory; padding:8px 2px 14px; margin:0 -2px;">
+            <div class="sv-card" style="flex:none; width:560px; height:540px; scroll-snap-align:start; position:relative; overflow:hidden; border-radius:22px; background:#262219;">
+              <image-slot id="sv-trend-1" shape="rect" src="https://picsum.photos/seed/sisso-luxe/1200/1200?grayscale" placeholder="Projet — Luxe" style="position:absolute; inset:0; width:100%; height:100%;" class="sv-zoom"></image-slot>
+              <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,19,15,.5) 0%, rgba(20,19,15,.08) 32%, rgba(20,19,15,.45) 66%, rgba(20,19,15,.92) 100%); pointer-events:none;"></div>
+              <div style="position:absolute; inset:0; padding:30px; display:flex; flex-direction:column; justify-content:space-between; color:var(--on-dark);">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; background:rgba(243,241,236,0.14); backdrop-filter:blur(6px); padding:6px 12px; border-radius:30px; border:1px solid rgba(243,241,236,0.25);">01 · LUXE</span>
+                  <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; opacity:.8;">Tendance 01 / 05</span>
+                </div>
+                <div>
+                  <h3 style="font-family:var(--font-sans); font-size:36px; font-weight:300; letter-spacing:0.01em; text-transform:uppercase; line-height:1.02; margin:0;">Édition Saint-Honoré</h3>
+                  <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; opacity:.85; margin-top:12px;">Atelier Dyakova</div>
+                  <p style="font-family:var(--font-sub); font-style:italic; font-size:17px; line-height:1.4; opacity:.92; margin:12px 0 0 0; max-width:40ch;">Identité d’un concept-store éphémère, gravée dans le métal.</p>
+                </div>
+              </div>
+            </div>
+            <div class="sv-card" style="flex:none; width:560px; height:540px; scroll-snap-align:start; position:relative; overflow:hidden; border-radius:22px; background:#262219;">
+              <image-slot id="sv-trend-2" shape="rect" src="https://picsum.photos/seed/sisso-art/1200/1200?grayscale" placeholder="Projet — Art" style="position:absolute; inset:0; width:100%; height:100%;" class="sv-zoom"></image-slot>
+              <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,19,15,.5) 0%, rgba(20,19,15,.08) 32%, rgba(20,19,15,.45) 66%, rgba(20,19,15,.92) 100%); pointer-events:none;"></div>
+              <div style="position:absolute; inset:0; padding:30px; display:flex; flex-direction:column; justify-content:space-between; color:var(--on-dark);">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; background:rgba(243,241,236,0.14); backdrop-filter:blur(6px); padding:6px 12px; border-radius:30px; border:1px solid rgba(243,241,236,0.25);">02 · ART</span>
+                  <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; opacity:.8;">Tendance 02 / 05</span>
+                </div>
+                <div>
+                  <h3 style="font-family:var(--font-sans); font-size:36px; font-weight:300; letter-spacing:0.01em; text-transform:uppercase; line-height:1.02; margin:0;">Signal</h3>
+                  <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; opacity:.85; margin-top:12px;">Spin</div>
+                  <p style="font-family:var(--font-sub); font-style:italic; font-size:17px; line-height:1.4; opacity:.92; margin:12px 0 0 0; max-width:40ch;">Signalétique générative d’une exposition, recalculée chaque jour.</p>
+                </div>
+              </div>
+            </div>
+            <div class="sv-card" style="flex:none; width:560px; height:540px; scroll-snap-align:start; position:relative; overflow:hidden; border-radius:22px; background:#262219;">
+              <image-slot id="sv-trend-3" shape="rect" src="https://picsum.photos/seed/sisso-com/1200/1200?grayscale" placeholder="Projet — Communication" style="position:absolute; inset:0; width:100%; height:100%;" class="sv-zoom"></image-slot>
+              <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,19,15,.5) 0%, rgba(20,19,15,.08) 32%, rgba(20,19,15,.45) 66%, rgba(20,19,15,.92) 100%); pointer-events:none;"></div>
+              <div style="position:absolute; inset:0; padding:30px; display:flex; flex-direction:column; justify-content:space-between; color:var(--on-dark);">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; background:rgba(243,241,236,0.14); backdrop-filter:blur(6px); padding:6px 12px; border-radius:30px; border:1px solid rgba(243,241,236,0.25);">03 · COM</span>
+                  <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; opacity:.8;">Tendance 03 / 05</span>
+                </div>
+                <div>
+                  <h3 style="font-family:var(--font-sans); font-size:36px; font-weight:300; letter-spacing:0.01em; text-transform:uppercase; line-height:1.02; margin:0;">Contre-forme</h3>
+                  <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; opacity:.85; margin-top:12px;">Bonsoir Paris</div>
+                  <p style="font-family:var(--font-sub); font-style:italic; font-size:17px; line-height:1.4; opacity:.92; margin:12px 0 0 0; max-width:40ch;">Campagne d’affichage 100 % typographique, sans image.</p>
+                </div>
+              </div>
+            </div>
+            <div class="sv-card" style="flex:none; width:560px; height:540px; scroll-snap-align:start; position:relative; overflow:hidden; border-radius:22px; background:#262219;">
+              <image-slot id="sv-trend-4" shape="rect" src="https://picsum.photos/seed/sisso-spirit/1200/1200?grayscale" placeholder="Projet — Spiritueux" style="position:absolute; inset:0; width:100%; height:100%;" class="sv-zoom"></image-slot>
+              <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,19,15,.5) 0%, rgba(20,19,15,.08) 32%, rgba(20,19,15,.45) 66%, rgba(20,19,15,.92) 100%); pointer-events:none;"></div>
+              <div style="position:absolute; inset:0; padding:30px; display:flex; flex-direction:column; justify-content:space-between; color:var(--on-dark);">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; background:rgba(243,241,236,0.14); backdrop-filter:blur(6px); padding:6px 12px; border-radius:30px; border:1px solid rgba(243,241,236,0.25);">04 · SPIRIT.</span>
+                  <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; opacity:.8;">Tendance 04 / 05</span>
+                </div>
+                <div>
+                  <h3 style="font-family:var(--font-sans); font-size:36px; font-weight:300; letter-spacing:0.01em; text-transform:uppercase; line-height:1.02; margin:0;">Cuvée Brut Nature</h3>
+                  <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; opacity:.85; margin-top:12px;">Here Design</div>
+                  <p style="font-family:var(--font-sub); font-style:italic; font-size:17px; line-height:1.4; opacity:.92; margin:12px 0 0 0; max-width:40ch;">Packaging d’une cuvée bio, étiquette imprimée à l’encre de marc.</p>
+                </div>
+              </div>
+            </div>
+            <div class="sv-card" style="flex:none; width:560px; height:540px; scroll-snap-align:start; position:relative; overflow:hidden; border-radius:22px; background:#262219;">
+              <image-slot id="sv-trend-5" shape="rect" src="https://picsum.photos/seed/sisso-web/1200/1200?grayscale" placeholder="Projet — Web" style="position:absolute; inset:0; width:100%; height:100%;" class="sv-zoom"></image-slot>
+              <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,19,15,.5) 0%, rgba(20,19,15,.08) 32%, rgba(20,19,15,.45) 66%, rgba(20,19,15,.92) 100%); pointer-events:none;"></div>
+              <div style="position:absolute; inset:0; padding:30px; display:flex; flex-direction:column; justify-content:space-between; color:var(--on-dark);">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; background:rgba(243,241,236,0.14); backdrop-filter:blur(6px); padding:6px 12px; border-radius:30px; border:1px solid rgba(243,241,236,0.25);">05 · WEB</span>
+                  <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; opacity:.8;">Tendance 05 / 05</span>
+                </div>
+                <div>
+                  <h3 style="font-family:var(--font-sans); font-size:36px; font-weight:300; letter-spacing:0.01em; text-transform:uppercase; line-height:1.02; margin:0;">Interface Lente</h3>
+                  <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; opacity:.85; margin-top:12px;">Locomotive</div>
+                  <p style="font-family:var(--font-sub); font-style:italic; font-size:17px; line-height:1.4; opacity:.92; margin:12px 0 0 0; max-width:40ch;">Site éditorial expérimental, pensé contre le scroll infini.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ============================ ARCHIVES ============================ -->
+    <sc-if value="{{ isArchives }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:24px 12px 0;">
+        <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.2em; color:var(--ink-2); text-transform:uppercase;">Toutes les éditions</div>
+        <h1 style="font-size:clamp(44px,6vw,84px); font-weight:300; letter-spacing:0.006em; line-height:.97; text-transform:uppercase; margin:14px 0 40px 0;">Archives</h1>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <sc-for list="{{ archives }}" as="ed" hint-placeholder-count="8">
+            <button class="sv-card" style="width:100%; display:grid; grid-template-columns:130px 240px 1fr auto; align-items:center; gap:24px; padding:26px 30px; background:#fff; border:1px solid var(--line); border-radius:20px; text-align:left;">
+              <span style="font-size:32px; font-weight:600; letter-spacing:-0.03em;">N°{{ ed.w }}</span>
+              <span style="font-family:var(--font-mono); font-size:12px; color:var(--ink-2);">{{ ed.range }}</span>
+              <span style="font-size:15px; color:var(--ink-2); line-height:1.4;">{{ ed.note }}</span>
+              <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-3); text-align:right;">{{ ed.n }} ART. ↗</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============================ SÉLECTIONS ============================ -->
+    <sc-if value="{{ isSelections }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:24px 12px 0;">
+        <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.2em; color:var(--ink-2); text-transform:uppercase;">Vos articles gardés</div>
+        <h1 style="font-size:clamp(44px,6vw,84px); font-weight:300; letter-spacing:0.006em; line-height:.97; text-transform:uppercase; margin:14px 0 40px 0;">Sélections <span style="color:var(--ink-3); font-size:.5em;">{{ selectionsCount }}</span></h1>
+        <sc-if value="{{ selectionsEmpty }}" hint-placeholder-val="{{ true }}">
+          <div style="border:1px solid var(--line); background:#fff; border-radius:22px; padding:80px 40px; text-align:center;">
+            <div style="font-family:var(--font-mono); font-size:13px; color:var(--ink-2); letter-spacing:0.06em;">AUCUN ARTICLE GARDÉ</div>
+            <p style="font-size:16px; color:var(--ink-3); margin:14px auto 0; max-width:44ch; line-height:1.5;">Touchez ＋ Garder sur n’importe quelle carte pour constituer votre sélection de la semaine.</p>
+          </div>
+        </sc-if>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <sc-for list="{{ selections }}" as="a" hint-placeholder-count="0">
+            <div class="sv-card" style="display:grid; grid-template-columns:66px 168px 1fr auto auto; align-items:center; gap:22px; padding:24px 30px; background:#fff; border:1px solid var(--line); border-radius:20px;">
+              <span style="font-family:var(--font-mono); font-size:12px; color:var(--ink-3);">{{ a.date }}</span>
+              <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.08em; color:var(--ink-2);">{{ a.num }} · {{ a.sector }}</span>
+              <a href="{{ a.url }}" target="_blank" rel="noopener" style="font-size:18px; font-weight:500; letter-spacing:-0.02em; line-height:1.25;">{{ a.title }}</a>
+              <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2); white-space:nowrap;">{{ a.source }}</span>
+              <button onClick="{{ a.toggle }}" style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.04em; text-transform:uppercase; color:var(--accent);">● Retirer</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============================ SECTEUR ============================ -->
+    <sc-if value="{{ isSector }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:24px 12px 0;">
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:30px; flex-wrap:wrap; margin-bottom:40px;">
+          <div>
+            <div style="font-family:var(--font-mono); font-size:13px; letter-spacing:0.12em; color:var(--ink-3);">SECTEUR {{ secInfo.n }}</div>
+            <h1 style="font-size:clamp(44px,6vw,84px); font-weight:300; letter-spacing:0.006em; line-height:.97; text-transform:uppercase; margin:12px 0 0 0;">{{ secInfo.label }}</h1>
+            <p style="font-family:var(--font-sub); font-style:italic; font-size:19px; color:var(--ink-2); margin:16px 0 0 0;">{{ secInfo.desc }}</p>
+          </div>
+          <div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2); text-align:right; line-height:1.9;">
+            <div style="color:var(--ink); font-size:14px;">{{ secCount }} articles</div>
+            <div>Semaine N°24</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+          <sc-for list="{{ secPaged }}" as="a" hint-placeholder-count="4">
+            <a href="{{ a.url }}" target="_blank" rel="noopener" class="sv-card" style="border:1px solid var(--line); border-radius:20px; background:#fff; padding:28px; display:flex; flex-direction:column; min-height:200px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; color:var(--ink-2);">{{ a.source }} · {{ a.date }}</span>
+                <button onClick="{{ a.toggle }}" style="font-family:var(--font-mono); font-size:13px; color:var(--ink-3);">
+                  <sc-if value="{{ a.marked }}" hint-placeholder-val="{{ false }}"><span style="color:var(--accent);">●</span></sc-if>
+                  <sc-if value="{{ a.notMarked }}" hint-placeholder-val="{{ true }}"><span>＋</span></sc-if>
+                </button>
+              </div>
+              <h3 style="font-size:23px; font-weight:600; letter-spacing:-0.025em; line-height:1.14; margin:0;">{{ a.title }}</h3>
+              <p style="font-size:14.5px; line-height:1.5; color:var(--ink-2); margin:14px 0 0 0;">{{ a.e }}</p>
+              <div style="flex:1; min-height:16px;"></div>
+              <span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-2);">Lire la source ↗</span>
+            </a>
+          </sc-for>
+        </div>
+        <sc-if value="{{ hasPager }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; align-items:center; gap:8px; margin-top:38px; font-family:var(--font-mono);">
+            <span style="font-size:10px; letter-spacing:0.14em; color:var(--ink-3); text-transform:uppercase; margin-right:6px;">Page</span>
+            <sc-for list="{{ pageItems }}" as="pg" hint-placeholder-count="2">
+              <button onClick="{{ pg.go }}" style="width:40px; height:40px; border:1px solid var(--line-2); border-radius:12px; font-size:12px; color:{{ pg.txt }}; background:{{ pg.active }};" style-hover="border-color:var(--ink);">{{ pg.label }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ============================ SYSTÈME ============================ -->
+    <sc-if value="{{ isSystem }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:24px 12px 0;">
+        <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.2em; color:var(--ink-2); text-transform:uppercase;">Direction de design · handoff</div>
+        <h1 style="font-size:clamp(44px,6vw,84px); font-weight:300; letter-spacing:0.006em; line-height:.97; text-transform:uppercase; margin:14px 0 0 0;">Système</h1>
+        <p style="font-family:var(--font-sub); font-style:italic; font-size:19px; color:var(--ink-2); margin:16px 0 44px 0; max-width:62ch; line-height:1.5;">Spécifications à transmettre pour l’implémentation Next.js + Tailwind. Valeurs exactes utilisées dans cette maquette.</p>
+
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;"><span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">01 · Palette</span><span style="flex:1; height:1px; background:var(--line);"></span></div>
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:54px;">
+          <div style="border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;"><div style="height:84px; background:#14130F;"></div><div style="padding:12px 14px;"><div style="font-size:13px; font-weight:600;">frame</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#14130F</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;"><div style="height:84px; background:#F3F1EC;"></div><div style="padding:12px 14px;"><div style="font-size:13px; font-weight:600;">canvas</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#F3F1EC</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;"><div style="height:84px; background:#ABA295;"></div><div style="padding:12px 14px;"><div style="font-size:13px; font-weight:600;">taupe (cartes)</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#ABA295</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;"><div style="height:84px; background:#16150F;"></div><div style="padding:12px 14px;"><div style="font-size:13px; font-weight:600;">ink</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#16150F</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;"><div style="height:84px; background:#6E6B62;"></div><div style="padding:12px 14px;"><div style="font-size:13px; font-weight:600;">ink-2</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#6E6B62</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;"><div style="height:84px; background:#E1DFD8;"></div><div style="padding:12px 14px;"><div style="font-size:13px; font-weight:600;">line</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#E1DFD8</div></div></div>
+          <div style="border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;"><div style="height:84px; background:#CDCAC0;"></div><div style="padding:12px 14px;"><div style="font-size:13px; font-weight:600;">line-2</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#CDCAC0</div></div></div>
+          <div style="border:1px solid var(--accent); border-radius:14px; overflow:hidden; background:#fff;"><div style="height:84px; background:var(--accent);"></div><div style="padding:12px 14px;"><div style="font-size:13px; font-weight:600;">accent</div><div style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">#2236E8 · parcimonie</div></div></div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;"><span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">02 · Typographie — Neue Haas Display Light / Swear Display (sous-titres) / JetBrains Mono</span><span style="flex:1; height:1px; background:var(--line);"></span></div>
+        <div style="border:1px solid var(--line); border-radius:18px; background:#fff; margin-bottom:54px; overflow:hidden;">
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--line);"><span style="font-size:48px; font-weight:600; letter-spacing:-0.035em;">Hero 38–82 / 600</span><span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">clamp · tracking −0.035em</span></div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--line);"><span style="font-size:27px; font-weight:600; letter-spacing:-0.025em;">Titre carte 23–27 / 600</span><span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">line-height 1.12</span></div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--line);"><span style="font-size:16px; color:var(--ink-2);">Corps & extrait 14–17 / 400 · interligne 1.5</span><span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">max 60ch</span></div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:20px 24px;"><span style="font-family:var(--font-mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-2);">META · MONO 10–12 · UPPER · +0.1em</span><span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-2);">dates · labels · numéros</span></div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;"><span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">03 · Shell & cartes</span><span style="flex:1; height:1px; background:var(--line);"></span></div>
+        <div style="border:1px solid var(--line); border-radius:18px; background:#fff; padding:24px; margin-bottom:54px;">
+          <p style="font-size:14.5px; color:var(--ink-2); margin:0 0 16px 0; line-height:1.6; max-width:74ch;">Page « encadrée » : fond <strong style="color:var(--ink);">frame #14130F</strong> avec 14px de padding, contenu sur un canvas arrondi <strong style="color:var(--ink);">26px</strong>. Hero pleine largeur (radius 22px). Cartes : radius <strong style="color:var(--ink);">20–22px</strong>, animation au survol <em>translateY(−7px) + zoom image 1.055 + flèche</em>, transition 0.55s cubic-bezier(.2,.8,.2,1). Rangées horizontales avec scroll-snap. Différenciation secteurs : numéro à deux chiffres en filigrane (opacity .07) + label monospace — aucune couleur dédiée.</p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:30px; padding:7px 14px;">01 · LUXE</span>
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:30px; padding:7px 14px;">02 · ART & CULTURE</span>
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:30px; padding:7px 14px;">03 · COMMUNICATION</span>
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:30px; padding:7px 14px;">04 · SPIRITUEUX</span>
+            <span style="font-family:var(--font-mono); font-size:12px; border:1px solid var(--line-2); border-radius:30px; padding:7px 14px;">05 · WEB & DIGITAL</span>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;"><span style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;">04 · tailwind.config — extrait</span><span style="flex:1; height:1px; background:var(--line);"></span></div>
+        <pre style="border:1px solid var(--line); border-radius:18px; background:#14130F; color:#E8E6DF; font-family:var(--font-mono); font-size:12px; line-height:1.7; padding:24px; overflow-x:auto; margin:0;">theme.extend = {
+  colors: {
+    frame: '#14130F', canvas: '#F3F1EC', taupe: '#ABA295',
+    ink: '#16150F', 'ink-2': '#6E6B62', 'ink-3': '#A7A399',
+    line: '#E1DFD8', 'line-2': '#CDCAC0', accent: '#2236E8',
+  },
+  fontFamily: { sans: ['Schibsted Grotesk','sans-serif'], mono: ['JetBrains Mono','monospace'] },
+  borderRadius: { frame: '26px', hero: '22px', card: '20px', chip: '40px' },
+}
+// Shell : bg-frame p-3.5 → div bg-canvas rounded-frame
+// Carte : group rounded-card overflow-hidden transition-transform duration-500
+//         hover:-translate-y-1.5  ·  img: group-hover:scale-105</pre>
+      </div>
+    </sc-if>
+
+    <!-- ===== FOOTER BAR ===== -->
+    <footer style="display:flex; align-items:center; justify-content:space-between; gap:24px; margin-top:64px; padding:24px 12px 8px; border-top:1px solid var(--line);">
+      <div style="display:flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.04em; color:var(--ink-2); text-transform:uppercase;">
+        <span style="width:6px; height:6px; border-radius:50%; background:var(--accent); animation:svblink 2.4s ease-in-out infinite;"></span>
+        Agent actif · MAJ lundi 06:00
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <span style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; color:var(--ink-3); text-transform:uppercase;">Neue Haas Display · Swear Display</span>
+        <span style="width:1px; height:18px; background:var(--line-2);"></span>
+        <button onClick="{{ goSystem }}" class="sv-uline" style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; color:var(--ink-2); text-transform:uppercase;">↳ Système de design</button>
+      </div>
+    </footer>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1320,&quot;height&quot;:960},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;blue&quot;,&quot;rust&quot;,&quot;mono&quot;],&quot;default&quot;:&quot;blue&quot;,&quot;tsType&quot;:&quot;'blue'|'rust'|'mono'&quot;},&quot;showTrends&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  rootRef = React.createRef();
+  phareRowRef = React.createRef();
+  trendRowRef = React.createRef();
+
+  FONTS = {
+    A: { sans: "'Space Grotesk',-apple-system,sans-serif", mono: "'Space Mono',monospace", name: 'Space Grotesk', mname: 'Space Mono' },
+    B: { sans: "'Schibsted Grotesk',-apple-system,sans-serif", mono: "'JetBrains Mono',monospace", name: 'Schibsted Grotesk', mname: 'JetBrains Mono' },
+    C: { sans: "'Hanken Grotesk',-apple-system,sans-serif", mono: "'IBM Plex Mono',monospace", name: 'Hanken Grotesk', mname: 'IBM Plex Mono' }
+  };
+  ACCENTS = { blue: '#2236E8', rust: '#B8431F', mono: '#16150F' };
+
+  SECTORS = [
+    { idx: 1, n: '01', key: 'luxe', label: 'LUXE', desc: 'Maisons, savoir-faire, retail & désir.' },
+    { idx: 2, n: '02', key: 'art', label: 'ART & CULTURE', desc: 'Institutions, expositions, marché de l’art.' },
+    { idx: 3, n: '03', key: 'com', label: 'COMMUNICATION', desc: 'Campagnes, agences, médias & influence.' },
+    { idx: 4, n: '04', key: 'spiritueux', label: 'SPIRITUEUX', desc: 'Vins, spiritueux & art de recevoir.' },
+    { idx: 5, n: '05', key: 'web', label: 'WEB & DIGITAL', desc: 'Produit, IA, design d’interface & tech.' }
+  ];
+
+  SRC_URL = {
+    'Business of Fashion': 'https://www.businessoffashion.com', 'Les Échos': 'https://www.lesechos.fr',
+    'Vogue Business': 'https://www.voguebusiness.com', 'Le Journal du Luxe': 'https://journalduluxe.fr',
+    "L'ADN": 'https://www.ladn.eu', 'Beaux-Arts': 'https://www.beauxarts.com', 'Le Monde': 'https://www.lemonde.fr',
+    'Télérama': 'https://www.telerama.fr', "Le Quotidien de l'Art": 'https://www.lequotidiendelart.com',
+    'Stratégies': 'https://www.strategies.fr', 'CB News': 'https://www.cbnews.fr', 'La Réclame': 'https://lareclame.fr',
+    'Influencia': 'https://www.influencia.net', 'LSA': 'https://www.lsa-conso.fr',
+    'La Revue du Vin de France': 'https://www.larvf.com', 'Le Figaro': 'https://www.lefigaro.fr',
+    'Terre de Vins': 'https://www.terredevins.com', 'TechCrunch': 'https://techcrunch.com',
+    "It's Nice That": 'https://www.itsnicethat.com', 'Smashing Magazine': 'https://www.smashingmagazine.com',
+    'Figma Blog': 'https://www.figma.com/blog', 'The Verge': 'https://www.theverge.com'
+  };
+
+  ARTICLES = [
+    { id: 'l1', sec: 1, kind: 'phare', title: 'Bottega Veneta quitte les réseaux sociaux et mise sur l’intimité', source: 'Business of Fashion', date: '16.06', e: 'La maison ferme ses comptes publics pour concentrer sa relation client sur des cercles privés et le print.' },
+    { id: 'l2', sec: 1, kind: 'liste', title: 'LVMH structure une cellule IA créative interne', source: 'Les Échos', date: '15.06', e: 'Un studio transversal pour outiller les directions artistiques des maisons du groupe.' },
+    { id: 'l3', sec: 1, kind: 'liste', title: 'Jacquemus ouvre un café-concept rue Saint-Honoré', source: 'Vogue Business', date: '17.06', e: 'Le créateur prolonge son univers en lieu de vie, entre retail et hospitalité.' },
+    { id: 'l4', sec: 1, kind: 'pool', title: 'Le quiet luxury cède la place au « loud craft »', source: 'Le Journal du Luxe', date: '14.06', e: 'Retour du geste artisanal visible et revendiqué comme signe de valeur.' },
+    { id: 'l5', sec: 1, kind: 'pool', title: 'Cartier numérise un siècle d’archives joaillières', source: "L'ADN", date: '12.06', e: 'Un fonds de dessins ouvert aux chercheurs et aux ateliers de création.' },
+    { id: 'l6', sec: 1, kind: 'pool', title: 'Loro Piana mise sur la traçabilité par blockchain', source: 'Business of Fashion', date: '11.06', e: 'Chaque pièce embarque un certificat numérique de provenance des fibres.' },
+    { id: 'a1', sec: 2, kind: 'phare', title: 'La Bourse de Commerce consacre une saison à l’IA générative', source: 'Beaux-Arts', date: '16.06', e: 'Une programmation qui interroge l’auteur, la copie et la valeur à l’ère des modèles.' },
+    { id: 'a2', sec: 2, kind: 'liste', title: 'Le Centre Pompidou programme ses années de fermeture hors-les-murs', source: 'Le Monde', date: '15.06', e: 'Collections itinérantes et résidences le temps d’un chantier de cinq ans.' },
+    { id: 'a3', sec: 2, kind: 'liste', title: 'Les musées parisiens unifient leur billetterie', source: 'Télérama', date: '13.06', e: 'Un passe commun et une interface repensée pour fluidifier la visite.' },
+    { id: 'a4', sec: 2, kind: 'pool', title: 'Art Basel teste un parcours augmenté', source: "Le Quotidien de l'Art", date: '12.06', e: 'Une couche numérique discrète pour documenter les œuvres sans écran omniprésent.' },
+    { id: 'a5', sec: 2, kind: 'pool', title: 'Une fondation rachète un fonds photographique inédit', source: 'Beaux-Arts', date: '10.06', e: 'Plusieurs milliers de tirages d’un reporter des années 70 entrent en collection.' },
+    { id: 'c0', sec: 3, kind: 'hero', title: 'Cannes Lions 2026 : la première campagne 100 % générée par IA remporte un Lion d’Or', source: 'Stratégies', date: '17.06', e: 'Conçue, scénarisée et produite par des modèles, la campagne relance le débat sur la signature créative et l’attribution. Le jury salue « une maîtrise de l’intention plus que de l’outil ».' },
+    { id: 'c1', sec: 3, kind: 'phare', title: 'Le Grand Prix récompense une campagne sans aucun visuel', source: 'CB News', date: '16.06', e: 'Une prise de parole entièrement typographique, portée par le rythme et le copywriting.' },
+    { id: 'c2', sec: 3, kind: 'liste', title: 'TikTok teste un format éditorial long', source: 'Influencia', date: '14.06', e: 'La plateforme courtise les marques premium avec un récit posé et chapitré.' },
+    { id: 'c3', sec: 3, kind: 'pool', title: 'Les agences indépendantes se regroupent en collectif', source: 'La Réclame', date: '15.06', e: 'Mutualiser la production sans perdre la signature : un pari de structure.' },
+    { id: 'c4', sec: 3, kind: 'pool', title: 'L’email retrouve la faveur des annonceurs premium', source: 'Stratégies', date: '12.06', e: 'Le canal possédé redevient un terrain d’expression éditoriale soignée.' },
+    { id: 'c5', sec: 3, kind: 'pool', title: 'La RSE s’impose comme critère de pitch', source: 'CB News', date: '11.06', e: 'Les annonceurs notent désormais l’empreinte des productions au même titre que l’idée.' },
+    { id: 's1', sec: 4, kind: 'phare', title: 'Maison Ferrand relance un cognac oublié de 1947', source: 'La Revue du Vin de France', date: '16.06', e: 'Un assemblage retrouvé en archives, réédité en série numérotée très confidentielle.' },
+    { id: 's2', sec: 4, kind: 'liste', title: 'Diageo investit dans le no-low premium', source: 'LSA', date: '15.06', e: 'Les alternatives sans alcool montent en gamme et en exigence de goût.' },
+    { id: 's3', sec: 4, kind: 'liste', title: 'Ruinart confie sa direction artistique à un duo', source: 'Le Figaro', date: '13.06', e: 'Un binôme design + scénographie pour réécrire le rituel de dégustation.' },
+    { id: 's4', sec: 4, kind: 'pool', title: 'Le mezcal artisanal perce à Paris', source: 'Terre de Vins', date: '12.06', e: 'Petits producteurs et traçabilité agave séduisent une clientèle curieuse.' },
+    { id: 's5', sec: 4, kind: 'pool', title: 'Une distillerie normande décroche une médaille internationale', source: 'Terre de Vins', date: '10.06', e: 'Le whisky français confirme sa montée en crédibilité à l’export.' },
+    { id: 'w1', sec: 5, kind: 'phare', title: 'Figma rachète un studio de motion pour intégrer l’animation IA', source: 'TechCrunch', date: '16.06', e: 'L’éditeur veut générer des transitions et micro-interactions directement dans le canevas.' },
+    { id: 'w2', sec: 5, kind: 'liste', title: 'Une typographie variable open-source fait le buzz', source: "It's Nice That", date: '15.06', e: 'Un caractère dont l’axe « grain » simule l’impression, repris par des dizaines de studios.' },
+    { id: 'w3', sec: 5, kind: 'liste', title: 'Le « slow web » inspire une vague de sites éditoriaux', source: 'Smashing Magazine', date: '14.06', e: 'Moins de scroll infini, plus de pages tenues et de lecture délibérée.' },
+    { id: 'w4', sec: 5, kind: 'pool', title: 'Les design systems intègrent des tokens génératifs', source: 'Figma Blog', date: '12.06', e: 'Des variables pilotées par règles plutôt que figées, pour des thèmes vivants.' },
+    { id: 'w5', sec: 5, kind: 'pool', title: 'WebGPU démocratise la 3D temps réel dans le navigateur', source: 'The Verge', date: '11.06', e: 'Des expériences riches sans plug-in, à portée des sites de marque.' }
+  ];
+
+  ARCHIVES = [
+    { w: '23', range: '08 \u2192 14 JUIN 2026', n: 26, note: 'IA à Cannes, retail expérientiel, no-low premium' },
+    { w: '22', range: '01 \u2192 07 JUIN 2026', n: 24, note: 'Saison muséale, packaging spiritueux, slow web' },
+    { w: '21', range: '25 \u2192 31 MAI 2026', n: 28, note: 'Maisons & IA, typographies variables, RSE' },
+    { w: '20', range: '18 \u2192 24 MAI 2026', n: 23, note: 'Retail hybride, marché de l’art, WebGPU' },
+    { w: '19', range: '11 \u2192 17 MAI 2026', n: 25, note: 'Loud craft, billetterie unifiée, motion design' },
+    { w: '18', range: '04 \u2192 10 MAI 2026', n: 22, note: 'Quiet luxury, fondations, collectifs d’agences' },
+    { w: '17', range: '27 AVR \u2192 03 MAI 2026', n: 27, note: 'Traçabilité, expositions augmentées, email' },
+    { w: '16', range: '20 \u2192 26 AVRIL 2026', n: 24, note: 'Archives joaillières, mezcal, design systems' },
+    { w: '15', range: '13 \u2192 19 AVRIL 2026', n: 21, note: 'Hospitalité de marque, whisky français, IA produit' },
+    { w: '14', range: '06 \u2192 12 AVRIL 2026', n: 23, note: 'Direction artistique, médias, interface lente' }
+  ];
+
+  state = { view: 'home', activeSector: 1, secPage: 1, typeface: 'B', accent: 'blue', marks: [] };
+
+  componentDidMount() { this.applyTheme(); }
+  componentDidUpdate() { this.applyTheme(); }
+  applyTheme() {
+    const r = this.rootRef && this.rootRef.current; if (!r) return;
+    r.style.setProperty('--accent', this.ACCENTS[this.props.accent ?? this.state.accent] || this.ACCENTS.blue);
+  }
+
+  setView(v) { this.setState({ view: v }); window.scrollTo(0, 0); }
+  openSector(idx) { this.setState({ view: 'sector', activeSector: idx, secPage: 1 }); window.scrollTo(0, 0); }
+  setFont(k) { this.setState({ typeface: k }); }
+  setPage(p) { this.setState({ secPage: p }); window.scrollTo(0, 0); }
+  toggleMark(id, e) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
+    this.setState(s => ({ marks: s.marks.includes(id) ? s.marks.filter(x => x !== id) : [...s.marks, id] }));
+  }
+  scrollRow(which, dir) {
+    const r = which === 'p' ? this.phareRowRef : this.trendRowRef;
+    if (r && r.current) r.current.scrollBy({ left: dir * 408, behavior: 'smooth' });
+  }
+
+  dec(a) {
+    const s = this.SECTORS[a.sec - 1];
+    const marked = this.state.marks.includes(a.id);
+    return { ...a, num: s.n, sector: s.label, key: s.key, url: this.SRC_URL[a.source] || '#',
+      marked, notMarked: !marked, toggle: (e) => this.toggleMark(a.id, e), openSector: () => this.openSector(a.sec) };
+  }
+
+  renderVals() {
+    const all = this.ARTICLES.map(a => this.dec(a));
+    const view = this.state.view;
+    const hero = all.find(a => a.kind === 'hero');
+    const phares = this.SECTORS.map(s => all.find(a => a.sec === s.idx && a.kind === 'phare')).filter(Boolean);
+    const secondary = all.filter(a => a.kind === 'liste');
+    const selections = all.filter(a => a.marked);
+
+    const activeSector = this.state.activeSector;
+    const secInfo = this.SECTORS[activeSector - 1];
+    const secAll = all.filter(a => a.sec === activeSector);
+    const perPage = 4;
+    const total = Math.max(1, Math.ceil(secAll.length / perPage));
+    const page = Math.min(this.state.secPage, total);
+    const secPaged = secAll.slice((page - 1) * perPage, page * perPage);
+    const pageItems = Array.from({ length: total }, (_, i) => ({ label: String(i + 1).padStart(2, '0'), active: (i + 1) === page ? 'var(--ink)' : 'transparent', txt: (i + 1) === page ? '#fff' : 'var(--ink)', go: () => this.setPage(i + 1) }));
+
+    const primaryNav = [
+      { label: 'Cette semaine', color: view === 'home' ? 'var(--ink)' : 'var(--ink-2)', go: () => this.setView('home') },
+      { label: 'Archives', color: view === 'archives' ? 'var(--ink)' : 'var(--ink-2)', go: () => this.setView('archives') },
+      { label: 'Sélections', color: view === 'selections' ? 'var(--ink)' : 'var(--ink-2)', go: () => this.setView('selections'), count: selections.length || null }
+    ];
+    const sectorChips = this.SECTORS.map(s => ({ ...s, go: () => this.openSector(s.idx) }));
+
+    return {
+      rootRef: this.rootRef, phareRowRef: this.phareRowRef, trendRowRef: this.trendRowRef,
+      isHome: view === 'home', isArchives: view === 'archives', isSelections: view === 'selections',
+      isSector: view === 'sector', isSystem: view === 'system',
+      goHome: () => this.setView('home'), goSystem: () => this.setView('system'),
+      primaryNav, sectorChips,
+      phPrev: () => this.scrollRow('p', -1), phNext: () => this.scrollRow('p', 1),
+      trPrev: () => this.scrollRow('t', -1), trNext: () => this.scrollRow('t', 1),
+      hero, heroToggle: hero ? hero.toggle : null, heroMarked: hero ? hero.marked : false, heroNotMarked: hero ? !hero.marked : true,
+      phares, secondary, totalArticles: this.ARTICLES.length, totalTrends: 5,
+      showTrends: this.props.showTrends ?? true,
+      archives: this.ARCHIVES,
+      selections, selectionsEmpty: selections.length === 0, selectionsCount: selections.length,
+      secInfo, secCount: secAll.length, secPaged, pageItems, hasPager: total > 1
+    };
+  }
+}
+</script>
+</body>
+</html>
