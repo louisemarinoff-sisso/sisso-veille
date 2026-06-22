@@ -34,6 +34,20 @@ function extractJson(text: string): GeneratedDigest {
   return JSON.parse(match[0]) as GeneratedDigest
 }
 
+// Le modèle retombe parfois sur la page d'accueil d'un média (ex: lejournaldesarts.fr,
+// fashionunited.fr) plutôt que l'article précis. On filtre ces URLs invalides après coup
+// plutôt que de se fier uniquement à la consigne du prompt.
+function isHomepageUrl(url: string | undefined | null): boolean {
+  if (!url) return true
+  try {
+    const { pathname, search } = new URL(url)
+    const meaningfulPath = pathname.replace(/\/+$/, '')
+    return meaningfulPath === '' && !search
+  } catch {
+    return true
+  }
+}
+
 export async function generateWeeklyDigestContent(): Promise<GeneratedDigest> {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY manquante.')
@@ -64,7 +78,7 @@ Réponds UNIQUEMENT avec un objet JSON strict de cette forme, sans texte autour 
 
 "tendances" doit contenir exactement 5 entrées, une par secteur.
 
-Règle stricte sur les URLs : pour chaque "url", copie EXACTEMENT l'adresse complète de la page d'article retournée par l'outil de recherche web (le lien profond vers l'article précis, avec son slug/chemin complet), jamais la page d'accueil du média ni un domaine nu (ex: pas "https://www.vogue.fr" mais bien "https://www.vogue.fr/article/nom-de-larticle-precis"). Si tu n'as pas trouvé d'URL d'article précise et vérifiée pour une actualité, ne l'inclus pas dans la liste.`
+Règle stricte sur les URLs : pour chaque "url", copie EXACTEMENT l'adresse complète de la page d'article retournée par l'outil de recherche web (le lien profond vers l'article précis, avec son slug/chemin complet), jamais la page d'accueil du média ni un domaine nu (ex: pas "https://www.vogue.fr" mais bien "https://www.vogue.fr/article/nom-de-larticle-precis"). Cette règle s'applique à TOUS les médias sans exception, y compris FashionUnited et Le Journal des Arts : ne renvoie jamais "https://fashionunited.fr", "https://www.fashionunited.fr/", "https://www.lejournaldesarts.fr" ou "https://www.lejournaldesarts.fr/" seuls — trouve et vérifie le chemin complet de l'article (ex: "https://www.lejournaldesarts.fr/marche/...", "https://fashionunited.fr/actualite/..."). Si après recherche tu ne trouves qu'un lien racine ou que tu n'es pas certain du chemin exact, n'invente rien et exclus complètement cette actualité de la liste plutôt que de mettre un lien vers la page d'accueil.`
 
   const response = await client.messages.create({
     model: MODEL,
@@ -79,5 +93,9 @@ Règle stricte sur les URLs : pour chaque "url", copie EXACTEMENT l'adresse comp
     .join('\n')
   if (!text) throw new Error('Aucune réponse texte du modèle.')
 
-  return extractJson(text)
+  const parsed = extractJson(text)
+  return {
+    articles: parsed.articles.filter((a) => !isHomepageUrl(a.url)),
+    tendances: parsed.tendances.filter((t) => !isHomepageUrl(t.url)),
+  }
 }
