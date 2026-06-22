@@ -64,13 +64,16 @@ Réponds UNIQUEMENT avec un objet JSON strict de cette forme, sans texte autour 
 
   const response = await client.messages.create({
     model: MODEL,
-    max_tokens: 8000,
+    max_tokens: 16000,
     tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 10 } as never],
     messages: [{ role: 'user', content: prompt }],
   })
 
-  const textBlock = response.content.find((block) => block.type === 'text')
-  if (!textBlock || textBlock.type !== 'text') throw new Error('Aucune réponse texte du modèle.')
+  const text = response.content
+    .filter((block) => block.type === 'text')
+    .map((block) => (block as { text: string }).text)
+    .join('\n')
+  if (!text) throw new Error('Aucune réponse texte du modèle.')
 
-  return extractJson(textBlock.text)
+  return extractJson(text)
 }
