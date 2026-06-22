@@ -4,6 +4,8 @@ import { generateWeeklyDigestContent } from '@/lib/anthropic'
 import { currentIsoWeek } from '@/lib/date'
 import { SEED_BUNDLE } from '@/lib/seed'
 
+export const maxDuration = 300
+
 function isAuthorized(req: NextRequest): boolean {
   const secret = process.env.CRON_SECRET
   if (!secret) return false

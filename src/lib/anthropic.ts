@@ -50,6 +50,8 @@ Pour chaque secteur, identifie 4 à 6 actualités réelles et récentes (campagn
 
 Choisis UNE SEULE actualité, parmi tout le lot, comme "à la une" de la semaine (is_featured: true) — la plus marquante transversalement. Toutes les autres ont is_featured: false.
 
+Fais une recherche web dédiée pour CHAQUE actualité individuelle (pas seulement pour celle à la une) afin de vérifier son URL précise avant de l'inclure — ne te contente pas d'une recherche générale par secteur.
+
 Réponds UNIQUEMENT avec un objet JSON strict de cette forme, sans texte autour :
 {
   "articles": [
@@ -67,7 +69,7 @@ Règle stricte sur les URLs : pour chaque "url", copie EXACTEMENT l'adresse comp
   const response = await client.messages.create({
     model: MODEL,
     max_tokens: 16000,
-    tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 10 } as never],
+    tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 35 } as never],
     messages: [{ role: 'user', content: prompt }],
   })
 
