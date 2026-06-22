@@ -60,7 +60,9 @@ Réponds UNIQUEMENT avec un objet JSON strict de cette forme, sans texte autour 
   ]
 }
 
-"tendances" doit contenir exactement 5 entrées, une par secteur. Les URLs doivent être réelles et vérifiées via la recherche web.`
+"tendances" doit contenir exactement 5 entrées, une par secteur.
+
+Règle stricte sur les URLs : pour chaque "url", copie EXACTEMENT l'adresse complète de la page d'article retournée par l'outil de recherche web (le lien profond vers l'article précis, avec son slug/chemin complet), jamais la page d'accueil du média ni un domaine nu (ex: pas "https://www.vogue.fr" mais bien "https://www.vogue.fr/article/nom-de-larticle-precis"). Si tu n'as pas trouvé d'URL d'article précise et vérifiée pour une actualité, ne l'inclus pas dans la liste.`
 
   const response = await client.messages.create({
     model: MODEL,
